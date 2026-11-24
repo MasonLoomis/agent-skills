@@ -1,6 +1,6 @@
 # rstack
 
-rstack is [@michaelshimeles](https://github.com/michaelshimeles)'s agent development stack: seven [agent skills](https://code.claude.com/docs/en/skills) and an [`AGENTS.md`](AGENTS.md) workflow that tells a coding agent how to take a change from a clean branch to a reviewed pull request. It is written for Claude Code, Cursor, Codex, and other agents that load `SKILL.md` folders.
+rstack is [@michaelshimeles](https://github.com/michaelshimeles)'s agent development stack: eight [agent skills](https://code.claude.com/docs/en/skills) and an [`AGENTS.md`](AGENTS.md) workflow that tells a coding agent how to take a change from a clean branch to a reviewed pull request. It is written for Claude Code, Cursor, Codex, and other agents that load `SKILL.md` folders.
 
 [![skills.sh](https://skills.sh/b/michaelshimeles/rstack)](https://skills.sh/michaelshimeles/rstack)
 
@@ -29,6 +29,7 @@ Use it if you want an agent to work in its own worktree, follow your project's a
 | [`before-and-after`](before-and-after/SKILL.md) | Captures before/after screenshots of web pages or elements for visual comparison and outputs a PR-ready markdown table. |
 | [`greploop`](greploop/SKILL.md) | Address Greptile feedback on a PR, MR, or shelved changelist through bounded review and fix cycles. |
 | [`greploop-apps`](greploop-apps/SKILL.md) | Run the greploop workflow with the `@greptile-apps` trigger when the normal trigger refuses a large PR. Requires `greploop`. |
+| [`ask-all-subs`](ask-all-subs/SKILL.md) | Ask one agent per T3 Code provider the same question, then report where they agree and disagree. |
 | [`unslop`](unslop/SKILL.md) | Cut AI tells from text you write or edit for a human reader. Apply before committing, posting, or sending. |
 
 ### Skill notes
@@ -37,6 +38,7 @@ Use it if you want an agent to work in its own worktree, follow your project's a
 - **before-and-after.** Drives the `@vercel/before-and-after` CLI. Install it with `npm i -g @vercel/before-and-after agent-browser`. The default upload host, 0x0.st, is public. Pass `--upload-url` for anything sensitive.
 - **greploop.** Needs Greptile installed on the repo and an authenticated `gh`, `glab`, or `p4`. The GitHub helper, `scripts/github_review.py`, needs Python 3.10+. It records each trigger and rejects stale checks and summaries. The cap is `--max-iterations`, default 10.
 - **greploop-apps.** Has no implementation of its own. Install it next to `greploop`.
+- **ask-all-subs.** Needs T3 Code with its `t3-code` MCP for `delegate_task`. The provider IDs and model names match one T3 setup, and the iMessage and Hermes pings assume an SSH host called `vps-mason`. Edit the table and commands in the skill to fit yours.
 - **unslop.** The body matches upstream. The frontmatter drops `disable-model-invocation: true` and scopes the description to text the agent writes or edits for people, so agents apply it without a typed `/unslop`. Put the flag back if you want slash-command-only behavior.
 
 ## Install
@@ -59,7 +61,7 @@ Clone the repo and copy skill folders into your agent's skills directory. For Cl
 git clone https://github.com/michaelshimeles/rstack.git
 cd rstack
 mkdir -p ~/.claude/skills/
-cp -r new-feature code-structure evidence-driven-testing before-and-after greploop greploop-apps unslop ~/.claude/skills/
+cp -r new-feature code-structure evidence-driven-testing before-and-after greploop greploop-apps ask-all-subs unslop ~/.claude/skills/
 ```
 
 `greploop-apps` only works with `greploop` installed beside it.
@@ -80,6 +82,7 @@ evidence-driven-testing/     SKILL.md, scripts/evidence.py, scripts/run-playwrig
 before-and-after/            SKILL.md, scripts/upload-and-copy.sh, scripts/adapters/, LICENSE
 greploop/                    SKILL.md, scripts/github_review.py, references/, LICENSE
 greploop-apps/               SKILL.md, LICENSE
+ask-all-subs/                SKILL.md
 unslop/                      SKILL.md, LICENSE
 tests/                       pytest suite for the recorder, review helper, and Playwright runner
 ```
@@ -96,7 +99,7 @@ Run `python3 -m pytest tests/ -q` and `git diff --check`. The tests need Python 
 
 ## Sources and licenses
 
-`new-feature`, `code-structure`, and `evidence-driven-testing` were written here. The rest are vendored, each with its license in its folder:
+`new-feature`, `code-structure`, `evidence-driven-testing`, and `ask-all-subs` were written here. The rest are vendored, each with its license in its folder:
 
 | Skill | Upstream | License |
 |---|---|---|
