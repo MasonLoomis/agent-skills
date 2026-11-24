@@ -109,7 +109,7 @@ Keep generated evidence under the ignored `.artifacts/` directory.
 
 | Skill | Source |
 |---|---|
-| `new-feature`, `code-structure`, `evidence-driven-testing` | this repo |
+| `new-feature`, `code-structure`, `evidence-driven-testing`, `ask-all-subs` | this repo |
 | `before-and-after` | this repo, vendored from [vercel-labs/before-and-after](https://github.com/vercel-labs/before-and-after) (or `npx skills add vercel-labs/before-and-after`) |
 | `greploop` | this repo, vendored from [greptileai/skills](https://github.com/greptileai/skills) |
 | `greploop-apps` | this repo, compatibility entrypoint requiring `greploop` |
